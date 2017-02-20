@@ -55,38 +55,24 @@
           var y = myChart.addMeasureAxis("y", "Annual_Sales");
           var s = myChart.addSeries("Franchise", dimple.plot.bar);
           myChart.addLegend(75, 25, 1000, 300, "center")
+
+          s.afterDraw = function( shape, data ) {
+
+          var s = d3.select( shape );
+
+          var rect = {
+          x: parseFloat( s.attr( "x" ) ),
+          y: parseFloat( s.attr( "y" ) ),
+          width: parseFloat( s.attr( "width" ) ),
+          height: parseFloat( s.attr( "height" ) )
+          };
+          console.log(data);
+          console.log(rect);
+
+          svg.append( "text" ).attr( "x", rect.x + rect.width / 3 ).attr( "y", rect.y - 5 ).attr( "class", "text-gender" ).style('fill', 'darkOrange').text( bFormatter(data.yValue));
+          };
+
           myChart.draw();
-          s.shapes.each(function(d) {
-
-              console.log(d);
-
-              // Get the shape as a d3 selection
-              var shape = d3.select(this),
-
-              // Get the height and width from the scales
-              height = myChart.y + myChart.height - y._scale(d.height);
-              width = x._scale(d.width);
-
-              // Add a text label for the value
-              svg.append("text")
-
-              // Position in the centre of the shape (vertical position is
-              // manually set due to cross-browser problems with baseline)
-              .attr("x", parseFloat(shape.attr("x")) + width / 2 - 15)
-              .attr("y", parseFloat(shape.attr("y")) - height / 2)
-
-              // Centre align
-              .style("text-anchor", "middle")
-              .style("font-size", "10px")
-              .style("font-family", "sans-serif")
-
-              // Make it a little transparent to tone down the black
-              .style("opacity", 0.7)
-
-              // Format the number
-              .text(bFormatter(d.yValue));
-
-        });
       };
       </script>
   </head>
